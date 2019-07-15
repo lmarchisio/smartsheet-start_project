@@ -31,6 +31,10 @@ This file contains examples of:
 * Update the API access token in start_new_project.py
 * Run start_new_project.py
 
-## Future Goals
+## Goals/To-Dos
+- [x] Make many cross-sheet references
+- [x] Make many cross-sheet references without having the script take 2 hours to run
+- [x] Make cell links
+- [x] Figure out why cell links are not working when creating a new line
 - [ ] Figure out how to set PM in Project Status as part of script
 - [ ] Add inputting shop loads to step 4
