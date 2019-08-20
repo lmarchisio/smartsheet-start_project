@@ -7,6 +7,7 @@ This python script creates a new project and Integrated Master Schedule (IMS) sh
 3. Creates new rows in IMS overview sheet, including creating new cross-sheet references
 4. Updates the Project Status sheet by creating a new line
 5. Adds cell links between appropriate cells in the new Project Sheet and Project Status*
+6. Creates and enables a new webhhok from sheet to Google Cloud Function.  
 
 \* Note that this task is separate from 4 because the API does not allow the creation of cell links as part of the create new line command, it must be done as part of the update line command.
 
@@ -17,7 +18,7 @@ After running, there are a few manual actions required to complete project setup
 
 This file contains examples of:
 * Functions to create cross-sheet references
-* Sheet map, column map, row map
+* Sheet map, column map, row map, webhook map
 * Cell links
 
 ## Requirements
