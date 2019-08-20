@@ -66,7 +66,7 @@ this_project = input()
 start = timeit.default_timer()
 
 # ---------- create new project sheet ----------
-print('starting task 1 of 5: create new project sheet')
+print('task 1 of 6: create new project sheet')
 
 # create copy of template in workspace Projects, Open
 response = ss_client.Sheets.copy_sheet(
@@ -82,7 +82,7 @@ response = ss_client.Sheets.copy_sheet(
 print('task 1 done')
 
 # ---------- create new tally sheet ----------
-print('starting task 2 of 5: create new IMS overview sheet')
+print('task 2 of 6: create new IMS overview sheet')
 
 sheet_spec = ss_client.models.Sheet({
     'name': this_project + ' Overview',
@@ -120,7 +120,7 @@ new_sheet = response.result
 print('task 2 done')
 
 # ---------- create new rows for overview sheet ----------
-print('starting task 3 of 5: write rows in IMS overview sheet')
+print('task 3 of 6: write rows in IMS overview sheet')
 
 # build sheet map
 response = ss_client.Sheets.list_sheets(include_all=True)
@@ -172,7 +172,7 @@ for department in departments:
 print('task 3 done')
 
 # ---------- update Project Status sheet ----------
-print('starting task 4 of 5: add project to project status sheet')
+print('task 4 of 6: add project to project status sheet')
 
 # get project sheet
 sheet = ss_client.Sheets.get_sheet(map_of_sheets[this_project])
@@ -216,7 +216,7 @@ for row in sheet.rows:
 print('task 4 done')
 
 # ---------- update exp start and finish in new row in status ----------
-print('starting task 5 of 5: add cell links to project status sheet')
+print('task 5 of 6: add cell links to project status sheet')
 
 # create cell link from project sheet line 1 start
 cell_link = ss_client.models.CellLink()
@@ -261,6 +261,8 @@ new_row.cells.append(new_cell)
 update_row = ss_client.Sheets.update_rows(
     2762627773425540,
     [new_row])
+
+print('task 5 of 6: expected start and finish links completed')
 
 # ---------- update design start and finish in new row in status ----------
 # create cell link from project sheet line 1 start
@@ -307,6 +309,8 @@ update_row = ss_client.Sheets.update_rows(
     2762627773425540,
     [new_row])
 
+print('task 5 of 6: design start and finish links completed')
+
 # ---------- update fab start and finish in new row in status ----------
 # create cell link from project sheet line 1 start
 cell_link = ss_client.models.CellLink()
@@ -352,7 +356,44 @@ update_row = ss_client.Sheets.update_rows(
     2762627773425540,
     [new_row])
 
+print('task 5 of 6: fab start and finish links completed')
 print('task 5 done')
+
+# ---------- update exp start and finish in new row in status ----------
+print('task 6 of 6: creating webhook')
+
+# get project sheet
+sheet = ss_client.Sheets.get_sheet(map_of_sheets[this_project])
+
+# create webhook
+Webhook = ss_client.Webhooks.create_webhook(
+    smartsheet.models.Webhook({
+        'name': 'Webhook_' + str(sheet.name),
+        'callbackUrl': 'https://us-central1-subtle-bit-245615.cloudfunctions.net/function-1',
+        'scope': 'sheet',
+        'scopeObjectId': int(sheet.id),
+        'events': ['*.*'],
+        'version': 1}))
+
+print('task 6 of 6: enabeling webhook')
+map_of_webhooks = {}
+
+IndexResult = ss_client.Webhooks.list_webhooks(
+    page_size=100,
+    page=1,
+    include_all=False)
+
+a = json.loads(str(IndexResult))
+b = a.get('data', 0)
+
+for n in range(len(b)):
+    c = b[n]
+    map_of_webhooks[str(c['name'])] = int(c['id'])
+    
+Webhook = ss_client.Webhooks.update_webhook(
+    map_of_webhooks['Webhook_' + str(sheet.name)],
+    ss_client.models.Webhook({
+        'enabled': True}))
 
 # end timer
 stop = timeit.default_timer()
