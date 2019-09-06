@@ -7,14 +7,14 @@ This python script creates a new project and Integrated Master Schedule (IMS) sh
 3. Creates new rows in IMS overview sheet, including creating new cross-sheet references
 4. Updates the Project Status sheet by creating a new line
 5. Adds cell links between appropriate cells in the new Project Sheet and Project Status*
-6. Creates and enables a new webhhok from sheet to Google Cloud Function.  
+6. Adds project manager in the Project Manager column of Project Status
+7. Creates and enables a new webhhok from sheet to Google Cloud Function.  
 
 \* Note that this task is separate from 4 because the API does not allow the creation of cell links as part of the create new line command, it must be done as part of the update line command.
 
-After running, there are a few manual actions required to complete project setup:
-1. Set PM in Project Status
-2. Add project to PMs schedule overview report
-3. Add project to PMs portfolio report
+After running, there are a two manual actions required to complete project setup:
+1. Add project to PMs schedule overview report
+2. Add project to PMs portfolio report
 
 This file contains examples of:
 * Functions to create cross-sheet references
@@ -37,5 +37,4 @@ This file contains examples of:
 - [x] Make many cross-sheet references without having the script take 2 hours to run
 - [x] Make cell links
 - [x] Figure out why cell links are not working when creating a new line
-- [ ] Figure out how to set PM in Project Status as part of script
-- [ ] Add inputting shop loads to step 4
+- [x] Figure out how to set PM in Project Status as part of script
