@@ -1,14 +1,11 @@
 import smartsheet
 import logging
 
-access_token = None
 project_columns = {}
 
-# initialize client
-ss_client = smartsheet.Smartsheet(access_token)
-
 # helper functions to create cross sheet references
-def make_start_reference(dept, source, destination):
+def make_start_reference(dept, source, destination, token):
+    ss_client = smartsheet.Smartsheet(token)
     xref = ss_client.models.CrossSheetReference({
         'name': dept + ' Start Range',
         'source_sheet_id': int(source),
@@ -19,18 +16,24 @@ def make_start_reference(dept, source, destination):
     result = ss_client.Sheets.create_cross_sheet_reference(
            destination, xref)
 
-def make_finish_reference(dept, source, destination):
-        xref = ss_client.models.CrossSheetReference({
+def make_finish_reference(dept, source, destination, token):
+    ss_client = smartsheet.Smartsheet(token)
+    xref = ss_client.models.CrossSheetReference({
         'name': dept + ' Finish Range',
         'source_sheet_id': int(source),
         'start_column_id': project_columns[dept + ' Finish'],
         'end_column_id': project_columns[dept + ' Finish']
         })
 
-        result = ss_client.Sheets.create_cross_sheet_reference(
+    result = ss_client.Sheets.create_cross_sheet_reference(
            destination, xref)
 
-def create_overview_columns(project):
+def create_overview_columns(project, token):
+    ss_client = smartsheet.Smartsheet(token)
+    # make sure we don't miss any errors
+    ss_client.errors_as_exceptions(True)
+    # log all calls
+    logging.basicConfig(filename='rwsheet.log', level=logging.INFO)
     # build sheet map
     response = ss_client.Sheets.list_sheets(include_all=True)
     sheets = response.data
@@ -63,8 +66,8 @@ def create_overview_columns(project):
         overview_columns[column.title] = column.id
 
     for department in departments:
-        make_start_reference(department, map_of_sheets[project], sheet.id)
-        make_finish_reference(department, map_of_sheets[project], sheet.id)
+        make_start_reference(department, map_of_sheets[project], sheet.id, token)
+        make_finish_reference(department, map_of_sheets[project], sheet.id, token)
     
         row_a = ss_client.models.Row()
         row_a.to_top = True
@@ -89,4 +92,3 @@ def create_overview_columns(project):
             [row_a])
 
     print('done')
-
