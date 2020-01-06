@@ -1,4 +1,3 @@
-# from playsound import playsound
 import timeit
 from modules import new_sheet
 from modules import new_tally
@@ -8,8 +7,9 @@ from modules import add_startfinish_status_links
 from modules import add_design_status_links
 from modules import add_fab_status_links
 from modules import add_pm_to_status
-from modules import make_webhook
+from modules import make_webhooks
 from modules import add_pm_to_project
+from modules import sort_project_status
 
 # this creates an entire new project
 
@@ -52,8 +52,11 @@ print('adding fab start and finish links to project status sheet')
 add_fab_status_links.fab_links(this_project, access_token)
 print('adding project manager to project status sheet')
 add_pm_to_status.add_pm(project_manager, access_token)
-print('creating webhook')
-make_webhook.make_webhook(this_project, access_token)
+print('creating webhooks')
+make_webhooks.make_webhook(this_project, access_token)
+make_webhooks.make_pm_webhook(this_project, access_token)
+print('sorting project status sheet')
+sort_project_status.sort_project_status(access_token)
 
 # end timer
 stop = timeit.default_timer()
@@ -61,7 +64,8 @@ stop = timeit.default_timer()
 # Finish it
 print('all tasks complete')
 print('Duration of Smartsheet API activity was: ', stop - start)
-# playsound('Gong.wav')
 
 print('press Enter key to close')
 input()
+
+
