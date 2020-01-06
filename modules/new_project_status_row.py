@@ -47,6 +47,10 @@ def new_project_status_row(project, token):
       'column_id': status_columns['Project Name'],
       'value': project[7:len(project)]
     })
+    row_a.cells.append({
+        'column_id': status_columns['Status'],
+        'value': 'Open'
+    })
 
     # add row to project status sheet
     response = ss_client.Sheets.add_rows(
@@ -54,4 +58,5 @@ def new_project_status_row(project, token):
         [row_a])
 
     print('done')
+
 
