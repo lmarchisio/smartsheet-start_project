@@ -14,6 +14,8 @@ def new_sheet(project, token):
     logging.basicConfig(filename='rwsheet.log', level=logging.INFO)
 
     # copy template sheet
+    # must be done with a sheet instead of a template.
+    # template does not allow purchase email in purchase approved workflow to be copied to new sheet.
     response = ss_client.Sheets.copy_sheet(
         3222758374041476,
         smartsheet.models.ContainerDestination({
@@ -58,3 +60,4 @@ def new_sheet(project, token):
         [new_row])
     
     print('done')
+
